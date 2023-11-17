@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       background-color: lightblue;
@@ -34,15 +35,71 @@
       cursor: pointer;
     }
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 
 <div class="header">
   <img src="../img/logo.jpeg" >
   <h1>Bicicentro Gtics</h1>
-  <button class="button">Trabajadores</button>
+  <button id="button1" class="button">Trabajadores</button>
   <button class="button">Sedes</button>
 </div>
+<div class="container">
+  <br>
+  <h1>Lista Trabajadores 2023</h1>
+  <br>
+  <br>
+  <table class="table table-sm text-center">
+    <thead>
+    <tr>
+      <th class="align-middle">#</th>
+      <th class="align-middle">Nombre</th>
+      <th class="align-middle">Email</th>
+      <th class="align-middle">Ver</th>
+    </tr>
+    </thead>
+    <tbody id="tabla-trabajadores-body">
+    <!-- Aquí se insertarán los datos mediante JavaScript -->
+    </tbody>
+  </table>
+</div>
+<script>
+  $(document).ready(function () {
+    $("#button1").click(function () {
+      $.ajax({
+        method: "GET",
+        url: "http://localhost:8000/api/liga/",
+        dataType: "json"
+      })
+      .done(function (response) {
+        response.sort(function (a, b) {
+          return a.equipo.id - b.equipo.id;
+        });
+        $("#tabla-trabajadores-body").empty();
 
+        for (let i = 0; i < response.length; i++) {
+          const trab = response[i];
+
+          var row =
+            "<tr>" +
+            "<td class='align-middle'>" + (i+1) + "</td>" +
+            "<td class='align-middle'>" + trab.nombres + "</td>" +
+            "<td class='align-middle'>" + trab.correo + "</td>" +
+            //"<td class='align-middle'><button class='btn btn-success' onclick='verTrabajador(" + trab.nombres.id + ")'>Más Detalles</button></td>" +
+            "</tr>";
+          $("#tabla-trabajadores-body").append(row);
+        }
+      });
+    });
+
+    // Esta función debería ser definida en tu código o enlazada desde otro archivo
+    function verTrabajador(id) {
+      // Lógica para mostrar más detalles del trabajador con el ID proporcionado
+      alert("Ver detalles del trabajador con ID: " + id);
+    }
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
